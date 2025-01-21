@@ -150,13 +150,145 @@ static int	check_clsdret(t_map *map)
 	return (1);
 }
 
-static	int valid_map(t_map *map)
+static int	check_symbols(t_map *map, int *pec)
 {
-	// check if map is rectangular and closed
+	int		i;
+	int		n;
+
+	n = 0;
+	while (map->map[n])
+	{
+		i = 0;
+		while (map->map[n][i] != '\0')
+		{
+			if (map->map[n][i] == 'P')
+				pec[0]++;
+			else if (map->map[n][i] == 'E')
+				pec[1]++;
+			else if (map->map[n][i] == 'C')
+				pec[2]++;
+			i++;
+		}
+		n++;
+	}
+	if (pec[0] != 1 || pec[1] != 1 || pec[2] < 1)
+		return (0);
+	return (1);
+}
+static int	*findplayer(t_map *map, int *pcord)
+{
+	int		n;
+	int		i;
+
+	n = 0;
+	while (map->map[n])
+	{
+		i = 0;
+		while (map->map[n][i] != '\0')
+		{
+			if (map->map[n][i] == 'P')
+			{
+				pcord[0] = n;
+				pcord[1] = i;
+			}
+			i++;
+		}
+		n++;
+	}
+	return (pcord);
+}
+
+static void	freevisitd(int **visitd)
+{
+	int		n;
+
+	n = 0;
+	while (visitd[n])
+	{
+		free (visitd[n]);
+		n++;
+	}
+	free (visitd);
+}
+
+static int	**fillvisitd (t_map *map, int **visitd)
+{
+	int		n;
+	int		i;
+
+	n = 0;
+	while (map->map[n])
+	{
+		i = 0;
+		while (map->map[n][i])
+		{
+			visitd[n][i] = 0;
+			i++;
+		}
+		n++;
+	}
+	return (visitd);
+}
+
+static int	chck_path (t_map *map, int *pcord, int **visitd)
+{
+	return (1);
+}
+
+static int	check_wayout(t_map *map)
+{
+	int		pcord[2];
+	int		**visitd;
+	int		n;
+
+	findplayer(map, pcord);
+	n = 0;
+	while (map->map[n])
+		n++;
+	visitd = malloc ((n + 1) * sizeof (int *));
+	if (!visitd)
+		return (0);
+	visitd[n] = NULL;
+	n = 0;
+	while (visitd[n])
+	{
+		visitd[n] = malloc ((ft_strlen (map->map[n])) * sizeof (int));
+		if (!visitd[n])
+			return (freevisitd (visitd), 0);
+		n++;
+	}
+	visitd = fillvisitd (map, visitd);
+	if (!chck_path (map, pcord, visitd))
+		return (freevisitd (visitd), 0);
+
+
+	int i = 0;
+	n = 0;
+	while (map->map[n])
+	{
+		i = 0;
+		while (map->map[n][i])
+			printf ("%i", visitd[n][i++]);
+		n++;
+		printf ("\n");
+	}
+	
+	return (freevisitd (visitd), 1);
+}
+
+static int	valid_map(t_map *map)
+{
+	int		pec[3];
+
+	pec[0] = 0; //p
+	pec[1] = 0; //e
+	pec[2] = 0; //c
 	if (!check_clsdret (map))
 		return (0);
-	
-	// check if there is only one P, only one E and at leas 1 C
+	if (!check_symbols (map, pec))
+		return (0);
+	if (!check_wayout (map))
+		return (0);
 	// check if there is a way out
 	return (1);
 }
