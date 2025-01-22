@@ -222,7 +222,10 @@ static int	**fillvisitd (t_map *map, int **visitd)
 		i = 0;
 		while (map->map[n][i])
 		{
-			visitd[n][i] = 0;
+			if (map->map[n][i] == '1')
+				visitd[n][i] = 1;
+			else
+				visitd[n][i] = 0;
 			i++;
 		}
 		n++;
@@ -230,8 +233,43 @@ static int	**fillvisitd (t_map *map, int **visitd)
 	return (visitd);
 }
 
-static int	chck_path (t_map *map, int *pcord, int **visitd)
+static int	vld_walk (t_map *map, int **visitd)
 {
+	int		n;
+	int		i;
+	int		zeroes;
+
+	n = 0;
+	zeroes = 0;
+	while (map->map[n])
+	{
+		i = 0;
+		while (map->map[n][i])
+		{
+			if (visitd[n][i] == 0)
+				zeroes++;
+			i++;
+		}
+		n++;
+	}
+	return (zeroes);
+}
+
+static int	chck_path(t_map *map, int *pcord, int **visitd)
+{
+	int		zeroes;
+	int		foundexit;
+
+	zeroes = vld_walk (map, visitd);	//working
+	if (zeroes <= 1)	// if player doesn't have tiles to walk
+		return (0);
+	foundexit = 0;
+	while (vld_walk (map, visitd) != 0 || foundexit != 1)	//unnecessary
+		foundexit = exp_map (map, pcord, visitd);	//test this explore function is missing the x and y coordenates
+		
+	printf ("zeroes: %i\n", zeroes);
+	if (foundexit != 1)
+		return (0);
 	return (1);
 }
 
