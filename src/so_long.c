@@ -175,7 +175,8 @@ static int	check_symbols(t_map *map, int *pec)
 		return (0);
 	return (1);
 }
-static int	*findplayer(t_map *map, int *pcord)
+
+static void	*findplayer(t_map *map, int *x, int *y)
 {
 	int		n;
 	int		i;
@@ -188,14 +189,13 @@ static int	*findplayer(t_map *map, int *pcord)
 		{
 			if (map->map[n][i] == 'P')
 			{
-				pcord[0] = n;
-				pcord[1] = i;
+				*x = n;
+				*y = i;
 			}
 			i++;
 		}
 		n++;
 	}
-	return (pcord);
 }
 
 static void	freevisitd(int **visitd)
@@ -211,7 +211,7 @@ static void	freevisitd(int **visitd)
 	free (visitd);
 }
 
-static int	**fillvisitd (t_map *map, int **visitd)
+static int	**fillvisitd(t_map *map, int **visitd)
 {
 	int		n;
 	int		i;
@@ -233,53 +233,30 @@ static int	**fillvisitd (t_map *map, int **visitd)
 	return (visitd);
 }
 
-static int	vld_walk (t_map *map, int **visitd)
+static int	exp(t_map *map, int x, int y, int **visitd)
 {
-	int		n;
-	int		i;
-	int		zeroes;
-
-	n = 0;
-	zeroes = 0;
-	while (map->map[n])
-	{
-		i = 0;
-		while (map->map[n][i])
-		{
-			if (visitd[n][i] == 0)
-				zeroes++;
-			i++;
-		}
-		n++;
-	}
-	return (zeroes);
-}
-
-static int	chck_path(t_map *map, int *pcord, int **visitd)
-{
-	int		zeroes;
-	int		foundexit;
-
-	zeroes = vld_walk (map, visitd);	//working
-	if (zeroes <= 1)	// if player doesn't have tiles to walk
-		return (0);
-	foundexit = 0;
-	while (vld_walk (map, visitd) != 0 || foundexit != 1)	//unnecessary
-		foundexit = exp_map (map, pcord, visitd);	//test this explore function is missing the x and y coordenates
-		
-	printf ("zeroes: %i\n", zeroes);
-	if (foundexit != 1)
-		return (0);
-	return (1);
+	if (map->map[x][y] == 'E')
+		return (1);
+	visitd[x][y] = 1;
+	if (visitd[x + 1][y] != 1 && exp (map, x + 1, y, visitd))
+		return (1);
+	if (visitd[x][y + 1] != 1 && exp (map, x, y + 1, visitd))
+		return (1);
+	if (visitd[x - 1][y] != 1 && exp (map, x - 1, y, visitd))
+		return (1);
+	if (visitd[x][y - 1] != 1 && exp (map, x, y - 1, visitd))
+		return (1);
+	return (0);
 }
 
 static int	check_wayout(t_map *map)
 {
-	int		pcord[2];
+	int		x;
+	int		y;
 	int		**visitd;
 	int		n;
 
-	findplayer(map, pcord);
+	findplayer(map, &x, &y);
 	n = 0;
 	while (map->map[n])
 		n++;
@@ -296,21 +273,8 @@ static int	check_wayout(t_map *map)
 		n++;
 	}
 	visitd = fillvisitd (map, visitd);
-	if (!chck_path (map, pcord, visitd))
-		return (freevisitd (visitd), 0);
-
-
-	int i = 0;
-	n = 0;
-	while (map->map[n])
-	{
-		i = 0;
-		while (map->map[n][i])
-			printf ("%i", visitd[n][i++]);
-		n++;
-		printf ("\n");
-	}
-	
+	if (!exp (map, x, y, visitd))
+		return (freevisitd (visitd), 0);	
 	return (freevisitd (visitd), 1);
 }
 
@@ -327,7 +291,6 @@ static int	valid_map(t_map *map)
 		return (0);
 	if (!check_wayout (map))
 		return (0);
-	// check if there is a way out
 	return (1);
 }
 
@@ -347,8 +310,6 @@ int	main(int argc, char **argv)
 		return (0);
 	map = create_map (map, tmp_map);
 	int n = 0;
-	while (map->map[n])
-		printf ("%s\n", map->map[n++]);
 	free (tmp_map);
 	printf ("%i\n", valid_map (map));
 	if (!valid_map (map))

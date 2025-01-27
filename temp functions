@@ -1,0 +1,18 @@
+	int i = 0;
+	int n = 0;
+	while (map->map[n])
+	{
+		i = 0;
+		while (map->map[n][i])
+			printf ("%i", visitd[n][i++]);
+		n++;
+		printf ("\n");
+	}
+	printf ("\n");
+
+
+		printf ("%i\n", valid_map (map));
+
+
+	while (map->map[n])
+		printf ("%s\n", map->map[n++]);
