@@ -1,13 +1,54 @@
-SRC	=	$(addprefix src/, ft_strlen.c ft_strncmp.c so_long.c ft_strdup.c ft_strjoin.c)
-OBJS	=	$(SRCS:.c=.o)
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/01/28 15:19:12 by gribeiro          #+#    #+#              #
+#    Updated: 2025/01/28 15:52:16 by gribeiro         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
+# Project name
+NAME = so_long
+
+# Source files and object files
+SRC = $(addprefix src/, ft_strlen.c ft_strncmp.c so_long.c ft_strdup.c ft_strjoin.c ft_calloc.c check_wayout.c freemem.c create_map.c valid_map.c)
+OBJS = $(SRC:.c=.o)
+
+# Compiler and flags
 CC = cc
-#CFLAGS = -Wall -Wextra -Werror
+#CFLAGS = -Wall -Wextra -Werror -g #apagar -g
 
-$(NAME):
-	$(OBJS)
-	ar rcs ${NAME} ${OBJS}
+# MiniLibX configuration
+MLX_DIR = ./minilibx
+MLX_LIB = $(MLX_DIR)/libmlx.a
+LIBS = -L$(MLX_DIR) -lmlx -lm -lXext -lX11
 
-test:
-	cc $(SRC) $(CFLAGS) -o so_long.out
-	./so_long.out maps/01.ber
+# Rules
+all: mlx $(NAME)
+
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
+
+mlx:
+	@if [ ! -d "$(MLX_DIR)" ]; then \
+		git clone https://github.com/42Paris/minilibx-linux.git $(MLX_DIR); \
+	fi
+	@make -C $(MLX_DIR)
+
+clean:
+	rm -f $(OBJS)
+	@make -C $(MLX_DIR) clean
+
+fclean: clean
+	rm -f $(NAME)
+
+re: fclean all
+
+test: all
+	./$(NAME) maps/01.ber
+
+valgrind: all
+	valgrind ./$(NAME) maps/01.ber
