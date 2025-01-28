@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:19:08 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/01/28 16:37:15 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/01/28 16:42:39 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	draw_map(t_map *map, void *mlx)
 	while (map->map[row])
 	{
 		col = 0;
-		while (map->map[col])
+		while (map->map[row][col])
 		{
 			if (map->map[row][col] == '1')
 			
