@@ -6,13 +6,13 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:19:27 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/01/28 15:28:48 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/01/28 19:46:53 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-static void	findplayer(t_map *map, int *x, int *y);
+void	findplayer(t_map *map, int *x, int *y);
 static char	**fillvisitd(t_map *map, char **visitd);
 static int	explore(t_map *map, int x, int y, char **visitd);
 
@@ -46,7 +46,7 @@ int	check_wayout(t_map *map)
 	return (freevisitd (visitd), 1);
 }
 
-static void	findplayer(t_map *map, int *x, int *y)
+void	findplayer(t_map *map, int *x, int *y)
 {
 	int		n;
 	int		i;
