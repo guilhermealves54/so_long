@@ -6,7 +6,7 @@
 #    By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/28 15:19:12 by gribeiro          #+#    #+#              #
-#    Updated: 2025/01/28 15:52:16 by gribeiro         ###   ########.fr        #
+#    Updated: 2025/02/07 03:21:36 by gribeiro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ OBJS = $(SRC:.c=.o)
 
 # Compiler and flags
 CC = cc
-#CFLAGS = -Wall -Wextra -Werror -g #apagar -g
+#CFLAGS = -Wall -Wextra -Werror -g #apagar
 
 # MiniLibX configuration
 MLX_DIR = ./minilibx
@@ -51,4 +51,4 @@ test: all
 	./$(NAME) maps/01.ber
 
 valgrind: all
-	valgrind ./$(NAME) maps/01.ber
+	valgrind --track-origins=yes ./so_long maps/01.ber
