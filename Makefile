@@ -6,7 +6,7 @@
 #    By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/28 15:19:12 by gribeiro          #+#    #+#              #
-#    Updated: 2025/02/12 15:52:48 by gribeiro         ###   ########.fr        #
+#    Updated: 2025/02/12 23:24:26 by gribeiro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ $(NAME): $(OBJS)
 mlx:
 	@if [ ! -d "$(MLX_DIR)" ]; then \
 		git clone https://github.com/42Paris/minilibx-linux.git $(MLX_DIR); \
-		@make -C $(MLX_DIR); \
+		make -C $(MLX_DIR); \
 	fi
 
 clean:
@@ -44,6 +44,12 @@ clean:
 
 fclean: clean
 	rm -f $(NAME)
+	@if [ -d "$(MLX_DIR)" ]; then \
+		rm -rf $(MLX_DIR); \
+	fi
+	@if [ -f "so_long" ]; then \
+		rm so_long; \
+	fi
 
 re: fclean all
 

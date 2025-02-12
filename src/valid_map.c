@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:19:49 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/02/11 16:40:01 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/02/12 23:15:25 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	valid_map(t_map *map)
 	pec[2] = 0;
 	map->check_c = 0;
 	map->check_e = 0;
-	map->c_nbr = cnt_colec (map);	
+	map->c_nbr = cnt_colec (map);
 	if (!check_clsdret (map))
 		return (0);
 	if (!check_symbols (map, pec))
@@ -102,6 +102,8 @@ static int	check_symbols(t_map *map, int *pec)
 				pec[1]++;
 			else if (map->map[n][i] == 'C')
 				pec[2]++;
+			else if (map->map[n][i] != '1' && map->map[n][i] != '0')
+				return (0);
 			i++;
 		}
 		n++;

@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:19:31 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/01/28 15:31:44 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/02/12 22:49:28 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ t_map	*create_map(t_map	*map, char *tmp_map)
 			l++;
 		i++;
 	}
+	if (i > 0 && tmp_map[i] == '\0' && tmp_map[i - 1] != '\n')
+		l++;
 	map->map = calloc ((l + 1), sizeof(char *));
 	if (!map->map)
 		return (freemem(map, 2), NULL);
@@ -73,7 +75,8 @@ static t_map	*fill_map(t_map *map, char *tmp_map)
 		}
 		map->map[n][l] = '\0';
 		n++;
-		i++;
+		if (tmp_map[i] != '\0')
+			i++;
 	}
 	return (map);
 }

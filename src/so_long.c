@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:19:08 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/02/12 15:54:28 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/02/12 22:18:55 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ void	put_bgimg(t_map *map, t_game *gm)
 		col = 0;
 		while (map->map[row][col])
 		{
-			x = col * 100;
-			y = row * 100;
+			x = col * 75;
+			y = row * 75;
 			if (map->map[row + 1] != NULL && map->map[row][col] == '1' 
 				&& map->map[row + 1][col] != '1')
 				mlx_put_image_to_window(gm->mlx, gm->win, gm->wall1, x, y);
@@ -48,7 +48,7 @@ int	draw_bg(t_map *map, t_game *game)
 {
 	int		sz;
 
-	sz = 100;
+	sz = 75;
 	game->lake = mlx_xpm_file_to_image(game->mlx, "assets/0.xpm", &sz, &sz);
 	game->wall = mlx_xpm_file_to_image(game->mlx, "assets/1.xpm", &sz, &sz);
 	game->wall1 = mlx_xpm_file_to_image(game->mlx, "assets/1-2.xpm", &sz, &sz);
@@ -70,7 +70,7 @@ void	put_colec(t_map *map, t_game *game)
 		while (map->map[n][i] != '\0')
 		{
 			if (map->map[n][i] == 'C')
-				mlx_put_image_to_window(game->mlx, game->win, game->colec, i * 100, n * 100);
+				mlx_put_image_to_window(game->mlx, game->win, game->colec, i * 75, n * 75);
 			i++;
 		}
 		n++;
@@ -106,17 +106,17 @@ int	put_pec(t_map *map, t_game *game)
 	int		sz;
 
 	findplayer (map, &x, &y);
-	sz = 100;
+	sz = 75;
 	game->plr = mlx_xpm_file_to_image(game->mlx, "assets/P.xpm", &sz, &sz);
 	game->pll = mlx_xpm_file_to_image(game->mlx, "assets/P-2.xpm", &sz, &sz);
 	game->colec = mlx_xpm_file_to_image(game->mlx, "assets/C.xpm", &sz, &sz);
 	game->exit = mlx_xpm_file_to_image(game->mlx, "assets/E.xpm", &sz, &sz);
 	if (!game->plr || !game->colec)
 		return (0);
-	mlx_put_image_to_window(game->mlx, game->win, game->plr, y*100, x*100);
+	mlx_put_image_to_window(game->mlx, game->win, game->plr, y*75, x*75);
 	put_colec(map, game);
 	findexit (map, &x, &y);
-	mlx_put_image_to_window(game->mlx, game->win, game->exit, y*100, x*100);
+	mlx_put_image_to_window(game->mlx, game->win, game->exit, y*75, x*75);
 	return (1);
 }
 
@@ -165,16 +165,16 @@ int	mov_up(t_map *map, t_game *game, int x, int y)
 	{
 		map->map[x - 1][y] = 'P';
 		map->map[x][y] = '0';
-		mlx_put_image_to_window(game->mlx, game->win, game->plr, y * 100, (x - 1) * 100);
-		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 100, x * 100);
+		mlx_put_image_to_window(game->mlx, game->win, game->plr, y * 75, (x - 1) * 75);
+		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 75, x * 75);
 		return (1);
 	}	
 	else if (map->map[x - 1][y] == 'C')
 	{
 		map->map[x - 1][y] = 'P';
 		map->map[x][y] = '0';
-		mlx_put_image_to_window(game->mlx, game->win, game->plr, y * 100, (x - 1) * 100);
-		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 100, x * 100);
+		mlx_put_image_to_window(game->mlx, game->win, game->plr, y * 75, (x - 1) * 75);
+		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 75, x * 75);
 		map->col += 1;
 		if (map->col == map->c_nbr)
 			map->v_exit = 1;
@@ -194,16 +194,16 @@ int	mov_down(t_map *map, t_game *game, int x, int y)
 	{
 		map->map[x + 1][y] = 'P';
 		map->map[x][y] = '0';
-		mlx_put_image_to_window(game->mlx, game->win, game->plr, y * 100, (x + 1) * 100);
-		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 100, x * 100);
+		mlx_put_image_to_window(game->mlx, game->win, game->plr, y * 75, (x + 1) * 75);
+		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 75, x * 75);
 		return (1);
 	}	
 	else if (map->map[x + 1][y] == 'C')
 	{
 		map->map[x + 1][y] = 'P';
 		map->map[x][y] = '0';
-		mlx_put_image_to_window(game->mlx, game->win, game->plr, y * 100, (x + 1) * 100);
-		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 100, x * 100);
+		mlx_put_image_to_window(game->mlx, game->win, game->plr, y * 75, (x + 1) * 75);
+		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 75, x * 75);
 		map->col += 1;
 		if (map->col == map->c_nbr)
 			map->v_exit = 1;
@@ -223,16 +223,16 @@ int	mov_right(t_map *map, t_game *game, int x, int y)
 	{
 		map->map[x][y + 1] = 'P';
 		map->map[x][y] = '0';
-		mlx_put_image_to_window(game->mlx, game->win, game->plr, (y + 1) * 100, x * 100);
-		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 100, x * 100);
+		mlx_put_image_to_window(game->mlx, game->win, game->plr, (y + 1) * 75, x * 75);
+		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 75, x * 75);
 		return (1);
 	}	
 	else if (map->map[x][y + 1] == 'C')
 	{
 		map->map[x][y + 1] = 'P';
 		map->map[x][y] = '0';
-		mlx_put_image_to_window(game->mlx, game->win, game->plr, (y + 1) * 100, x * 100);
-		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 100, x * 100);
+		mlx_put_image_to_window(game->mlx, game->win, game->plr, (y + 1) * 75, x * 75);
+		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 75, x * 75);
 		map->col += 1;
 		if (map->col == map->c_nbr)
 			map->v_exit = 1;
@@ -252,16 +252,16 @@ int	mov_left(t_map *map, t_game *game, int x, int y)
 	{
 		map->map[x][y - 1] = 'P';
 		map->map[x][y] = '0';
-		mlx_put_image_to_window(game->mlx, game->win, game->pll, (y - 1) * 100, x * 100);
-		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 100, x * 100);
+		mlx_put_image_to_window(game->mlx, game->win, game->pll, (y - 1) * 75, x * 75);
+		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 75, x * 75);
 		return (1);
 	}	
 	else if (map->map[x][y - 1] == 'C')
 	{
 		map->map[x][y - 1] = 'P';
 		map->map[x][y] = '0';
-		mlx_put_image_to_window(game->mlx, game->win, game->pll, (y - 1) * 100, x * 100);
-		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 100, x * 100);
+		mlx_put_image_to_window(game->mlx, game->win, game->pll, (y - 1) * 75, x * 75);
+		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 75, x * 75);
 		map->col += 1;
 		if (map->col == map->c_nbr)
 			map->v_exit = 1;
@@ -338,7 +338,7 @@ int	open_gui(t_map *map)
 	while (map->map[i++])
 		h++;
 	game.mlx = mlx_init();
-	game.win = mlx_new_window (game.mlx, w * 100, h * 100, "So_Long");
+	game.win = mlx_new_window (game.mlx, w * 75, h * 75, "So_Long");
 	if (!draw_map (map, &game))
 		return (0);
 	gameloop (&game);
