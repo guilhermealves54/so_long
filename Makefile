@@ -6,7 +6,7 @@
 #    By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/28 15:19:12 by gribeiro          #+#    #+#              #
-#    Updated: 2025/02/07 03:21:36 by gribeiro         ###   ########.fr        #
+#    Updated: 2025/02/12 15:52:48 by gribeiro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ OBJS = $(SRC:.c=.o)
 
 # Compiler and flags
 CC = cc
-#CFLAGS = -Wall -Wextra -Werror -g #apagar
+CFLAGS = -Wall -Wextra -Werror
 
 # MiniLibX configuration
 MLX_DIR = ./minilibx
@@ -35,8 +35,8 @@ $(NAME): $(OBJS)
 mlx:
 	@if [ ! -d "$(MLX_DIR)" ]; then \
 		git clone https://github.com/42Paris/minilibx-linux.git $(MLX_DIR); \
+		@make -C $(MLX_DIR); \
 	fi
-	@make -C $(MLX_DIR)
 
 clean:
 	rm -f $(OBJS)

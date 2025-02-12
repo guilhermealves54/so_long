@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:19:08 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/02/12 03:27:29 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/02/12 15:54:28 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,7 +312,7 @@ int key_press(int keycode, t_game *game)
     return (0);
 }
 
-void	gameloop(t_map *map, t_game *game)
+void	gameloop(t_game *game)
 {
 	mlx_hook (game->win, 17, 0, freemlx, game);
 	mlx_hook (game->win, 2, 1L << 0, key_press, game);
@@ -341,7 +341,7 @@ int	open_gui(t_map *map)
 	game.win = mlx_new_window (game.mlx, w * 100, h * 100, "So_Long");
 	if (!draw_map (map, &game))
 		return (0);
-	gameloop (map, &game);
+	gameloop (&game);
 	return (0);
 }
 
