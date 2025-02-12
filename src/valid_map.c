@@ -6,12 +6,13 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:19:49 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/01/28 15:23:14 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/02/11 16:40:01 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
+static int	cnt_colec(t_map *map);
 static int	check_clsdret(t_map *map);
 static int	check_symbols(t_map *map, int *pec);
 
@@ -22,6 +23,9 @@ int	valid_map(t_map *map)
 	pec[0] = 0;
 	pec[1] = 0;
 	pec[2] = 0;
+	map->check_c = 0;
+	map->check_e = 0;
+	map->c_nbr = cnt_colec (map);	
 	if (!check_clsdret (map))
 		return (0);
 	if (!check_symbols (map, pec))
@@ -29,6 +33,28 @@ int	valid_map(t_map *map)
 	if (!check_wayout (map))
 		return (0);
 	return (1);
+}
+
+static int	cnt_colec(t_map *map)
+{
+	int	n;
+	int	i;
+	int	res;
+
+	res = 0;
+	n = 0;
+	while (map->map[n])
+	{
+		i = 0;
+		while (map->map[n][i])
+		{
+			if (map->map[n][i] == 'C')
+				res++;
+			i++;
+		}
+		n++;
+	}
+	return (res);
 }
 
 static int	check_clsdret(t_map *map)

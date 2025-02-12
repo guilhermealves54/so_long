@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:19:08 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/02/07 19:38:27 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/02/12 03:27:29 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	put_bgimg(t_map *map, t_game *gm)
 			y = row * 100;
 			if (map->map[row + 1] != NULL && map->map[row][col] == '1' 
 				&& map->map[row + 1][col] != '1')
-				mlx_put_image_to_window(gm->mlx, gm->win, gm->wall_s, x, y);
+				mlx_put_image_to_window(gm->mlx, gm->win, gm->wall1, x, y);
 			else if (map->map[row][col] == '1')
 				mlx_put_image_to_window(gm->mlx, gm->win, gm->wall, x, y);
 			else
@@ -51,14 +51,14 @@ int	draw_bg(t_map *map, t_game *game)
 	sz = 100;
 	game->lake = mlx_xpm_file_to_image(game->mlx, "assets/0.xpm", &sz, &sz);
 	game->wall = mlx_xpm_file_to_image(game->mlx, "assets/1.xpm", &sz, &sz);
-	game->wall_s = mlx_xpm_file_to_image(game->mlx, "assets/1-2.xpm", &sz, &sz);
-	if (!game->lake || !game->wall || !game->wall_s)
+	game->wall1 = mlx_xpm_file_to_image(game->mlx, "assets/1-2.xpm", &sz, &sz);
+	if (!game->lake || !game->wall || !game->wall1)
 		return (0);
 	put_bgimg (map, game);
 	return (1);
 }
 
-void	findcolec(t_map *map, int *x, int *y)
+void	put_colec(t_map *map, t_game *game)
 {
 	int		n;
 	int		i;
@@ -70,10 +70,7 @@ void	findcolec(t_map *map, int *x, int *y)
 		while (map->map[n][i] != '\0')
 		{
 			if (map->map[n][i] == 'C')
-			{
-				*x = n;
-				*y = i;
-			}
+				mlx_put_image_to_window(game->mlx, game->win, game->colec, i * 100, n * 100);
 			i++;
 		}
 		n++;
@@ -110,14 +107,14 @@ int	put_pec(t_map *map, t_game *game)
 
 	findplayer (map, &x, &y);
 	sz = 100;
-	game->player = mlx_xpm_file_to_image(game->mlx, "assets/P.xpm", &sz, &sz);
+	game->plr = mlx_xpm_file_to_image(game->mlx, "assets/P.xpm", &sz, &sz);
+	game->pll = mlx_xpm_file_to_image(game->mlx, "assets/P-2.xpm", &sz, &sz);
 	game->colec = mlx_xpm_file_to_image(game->mlx, "assets/C.xpm", &sz, &sz);
 	game->exit = mlx_xpm_file_to_image(game->mlx, "assets/E.xpm", &sz, &sz);
-	if (!game->player || !game->colec)
+	if (!game->plr || !game->colec)
 		return (0);
-	mlx_put_image_to_window(game->mlx, game->win, game->player, y*100, x*100);
-	findcolec (map, &x, &y);
-	mlx_put_image_to_window(game->mlx, game->win, game->colec, y*100, x*100);
+	mlx_put_image_to_window(game->mlx, game->win, game->plr, y*100, x*100);
+	put_colec(map, game);
 	findexit (map, &x, &y);
 	mlx_put_image_to_window(game->mlx, game->win, game->exit, y*100, x*100);
 	return (1);
@@ -130,16 +127,18 @@ int	freemlx(t_game *game)
 	map = game->map;
 	if (game->exit)
 		mlx_destroy_image(game->mlx, game->exit);
-	if (game->player)
-		mlx_destroy_image(game->mlx, game->player);
+	if (game->plr)
+		mlx_destroy_image(game->mlx, game->plr);
+	if (game->pll)
+		mlx_destroy_image(game->mlx, game->pll);
 	if (game->colec)
 		mlx_destroy_image(game->mlx, game->colec);
 	if (game->lake)
 		mlx_destroy_image(game->mlx, game->lake);
 	if (game->wall)
 		mlx_destroy_image(game->mlx, game->wall);
-	if (game->wall_s)
-		mlx_destroy_image(game->mlx, game->wall_s);
+	if (game->wall1)
+		mlx_destroy_image(game->mlx, game->wall1);
 	if (game->win)
 		mlx_destroy_window(game->mlx, game->win);
 	if (game->mlx)
@@ -160,135 +159,155 @@ int	draw_map(t_map *map, t_game *game)
 	return (1);
 }
 
-void	mov_up(t_map *map, t_game *game, int x, int y)
+int	mov_up(t_map *map, t_game *game, int x, int y)
 {
 	if (map->map[x - 1][y] == '0')
 	{
 		map->map[x - 1][y] = 'P';
 		map->map[x][y] = '0';
-		mlx_put_image_to_window(game->mlx, game->win, game->player, y * 100, (x - 1) * 100);
+		mlx_put_image_to_window(game->mlx, game->win, game->plr, y * 100, (x - 1) * 100);
 		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 100, x * 100);
+		return (1);
 	}	
 	else if (map->map[x - 1][y] == 'C')
 	{
-		map->map[x][y - 1] = 'P';
+		map->map[x - 1][y] = 'P';
 		map->map[x][y] = '0';
-		mlx_put_image_to_window(game->mlx, game->win, game->player, y * 100, (x - 1) * 100);
+		mlx_put_image_to_window(game->mlx, game->win, game->plr, y * 100, (x - 1) * 100);
 		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 100, x * 100);
 		map->col += 1;
-		map->v_exit = 1;
+		if (map->col == map->c_nbr)
+			map->v_exit = 1;
+		return (1);
 	}
 	else if (map->map[x - 1][y] == 'E')
 	{
 		if (map->v_exit == 1)
 			freemlx(game);
 	}
+	return (0);
 }
 
-void	mov_down(t_map *map, t_game *game, int x, int y)
+int	mov_down(t_map *map, t_game *game, int x, int y)
 {
 	if (map->map[x + 1][y] == '0')
 	{
 		map->map[x + 1][y] = 'P';
 		map->map[x][y] = '0';
-		mlx_put_image_to_window(game->mlx, game->win, game->player, y * 100, (x + 1) * 100);
+		mlx_put_image_to_window(game->mlx, game->win, game->plr, y * 100, (x + 1) * 100);
 		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 100, x * 100);
+		return (1);
 	}	
 	else if (map->map[x + 1][y] == 'C')
 	{
 		map->map[x + 1][y] = 'P';
 		map->map[x][y] = '0';
-		mlx_put_image_to_window(game->mlx, game->win, game->player, y * 100, (x + 1) * 100);
+		mlx_put_image_to_window(game->mlx, game->win, game->plr, y * 100, (x + 1) * 100);
 		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 100, x * 100);
 		map->col += 1;
-		map->v_exit = 1;
+		if (map->col == map->c_nbr)
+			map->v_exit = 1;
+		return (1);
 	}
 	else if (map->map[x + 1][y] == 'E')
 	{
 		if (map->v_exit == 1)
 			freemlx(game);
 	}
+	return (0);
 }
 
-void	mov_right(t_map *map, t_game *game, int x, int y)
+int	mov_right(t_map *map, t_game *game, int x, int y)
 {
 	if (map->map[x][y + 1] == '0')
 	{
 		map->map[x][y + 1] = 'P';
 		map->map[x][y] = '0';
-		mlx_put_image_to_window(game->mlx, game->win, game->player, (y + 1) * 100, x * 100);
+		mlx_put_image_to_window(game->mlx, game->win, game->plr, (y + 1) * 100, x * 100);
 		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 100, x * 100);
+		return (1);
 	}	
 	else if (map->map[x][y + 1] == 'C')
 	{
 		map->map[x][y + 1] = 'P';
 		map->map[x][y] = '0';
-		mlx_put_image_to_window(game->mlx, game->win, game->player, (y + 1) * 100, x * 100);
+		mlx_put_image_to_window(game->mlx, game->win, game->plr, (y + 1) * 100, x * 100);
 		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 100, x * 100);
 		map->col += 1;
-		map->v_exit = 1;
+		if (map->col == map->c_nbr)
+			map->v_exit = 1;
+		return (1);
 	}
 	else if (map->map[x][y + 1] == 'E')
 	{
 		if (map->v_exit == 1)
 			freemlx(game);
 	}
+	return (0);
 }
 
-void	mov_left(t_map *map, t_game *game, int x, int y)
+int	mov_left(t_map *map, t_game *game, int x, int y)
 {
 	if (map->map[x][y - 1] == '0')
 	{
 		map->map[x][y - 1] = 'P';
 		map->map[x][y] = '0';
-		mlx_put_image_to_window(game->mlx, game->win, game->player, (y - 1) * 100, x * 100);
+		mlx_put_image_to_window(game->mlx, game->win, game->pll, (y - 1) * 100, x * 100);
 		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 100, x * 100);
+		return (1);
 	}	
 	else if (map->map[x][y - 1] == 'C')
 	{
 		map->map[x][y - 1] = 'P';
 		map->map[x][y] = '0';
-		mlx_put_image_to_window(game->mlx, game->win, game->player, (y - 1) * 100, x * 100);
+		mlx_put_image_to_window(game->mlx, game->win, game->pll, (y - 1) * 100, x * 100);
 		mlx_put_image_to_window(game->mlx, game->win, game->lake, y * 100, x * 100);
 		map->col += 1;
-		map->v_exit = 1;
+		if (map->col == map->c_nbr)
+			map->v_exit = 1;
+		return (1);
 	}
 	else if (map->map[x][y - 1] == 'E')
 	{
 		if (map->v_exit == 1)
 			freemlx(game);
 	}
+	return (0);
 }
 
 void	mov_player(t_game *game, int key)
 {
 	int	x;
 	int y;
+	int	mov_chg;
 	t_map	*map;
 	
-	map = game->map;	
+	map = game->map;
+	mov_chg = map->movs;
 	findplayer (map, &x, &y);
 	if (key == 97)
-		mov_left(map, game, x, y);
+		map->movs += mov_left(map, game, x, y);
 	else if (key == 100)
-		mov_right(map, game, x, y);
+		map->movs += mov_right(map, game, x, y);
 	else if (key == 115)
-		mov_down(map, game, x, y);
+		map->movs += mov_down(map, game, x, y);
 	else if (key == 119)
-		mov_up(map, game, x, y);
+		map->movs += mov_up(map, game, x, y);
+	if (map->movs > mov_chg)
+		printf ("Number of movements: %i\n", map->movs); //ALTERAR PARA FT_PRINTF.
 }
 
 int key_press(int keycode, t_game *game)
 {
     if (keycode == 65307)
         freemlx(game);
-    if (keycode == 97)//A
+    if (keycode == 97)
         mov_player(game, 97);
-    if (keycode == 100)//D
+    if (keycode == 100)
         mov_player(game, 100);
-    if (keycode == 115)//S
+    if (keycode == 115)
         mov_player(game, 115);
-    if (keycode == 119)//W
+    if (keycode == 119)
         mov_player(game, 119);
     return (0);
 }

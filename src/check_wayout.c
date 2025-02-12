@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:19:27 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/02/07 19:23:24 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/02/11 16:36:35 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,11 @@ static char	**fillvisitd(t_map *map, char **visitd)
 
 static int	explore(t_map *map, int x, int y, char **visitd)
 {
+	if (map->map[x][y] == 'C')
+		map->check_c += 1;
 	if (map->map[x][y] == 'E')
+		map->check_e = 1;
+	if (map->check_e == 1 && map->check_c == map->c_nbr)
 		return (1);
 	visitd[x][y] = '1';
 	if (visitd[x + 1][y] != '1' && explore (map, x + 1, y, visitd))

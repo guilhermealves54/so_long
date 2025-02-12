@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:19:18 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/02/07 18:45:50 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/02/12 03:16:00 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ typedef struct s_map
 	char	**map;
 	int		col;
 	int		v_exit;
+	int		check_c;
+	int		c_nbr;
+	int		check_e;
+	int		movs;
 }	t_map;
 
 typedef struct s_game
@@ -34,8 +38,9 @@ typedef struct s_game
 	void	*win;
 	void	*lake;
 	void	*wall;
-	void	*wall_s;
-	void	*player;
+	void	*wall1;
+	void	*plr;
+	void	*pll;
 	void	*exit;
 	void	*colec;
 	t_map	*map;
