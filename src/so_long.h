@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:19:18 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/02/12 03:16:00 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/02/12 23:54:29 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <unistd.h>
 # include <math.h>
 # include "../minilibx/mlx.h"
-# include <stdio.h> // apagar
+# include "../ft_printf/ft_printf.h"
 
 // Structs
 typedef struct s_map

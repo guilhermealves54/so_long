@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:19:08 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/02/12 22:18:55 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/02/13 00:29:52 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int	put_pec(t_map *map, t_game *game)
 	game->pll = mlx_xpm_file_to_image(game->mlx, "assets/P-2.xpm", &sz, &sz);
 	game->colec = mlx_xpm_file_to_image(game->mlx, "assets/C.xpm", &sz, &sz);
 	game->exit = mlx_xpm_file_to_image(game->mlx, "assets/E.xpm", &sz, &sz);
-	if (!game->plr || !game->colec)
+	if (!game->plr || !game->pll || !game->colec || !game->exit)
 		return (0);
 	mlx_put_image_to_window(game->mlx, game->win, game->plr, y*75, x*75);
 	put_colec(map, game);
@@ -120,7 +120,7 @@ int	put_pec(t_map *map, t_game *game)
 	return (1);
 }
 
-int	freemlx(t_game *game)
+int	freemlx(t_game *game, int out)
 {
 	t_map	*map;
 
@@ -141,21 +141,27 @@ int	freemlx(t_game *game)
 		mlx_destroy_image(game->mlx, game->wall1);
 	if (game->win)
 		mlx_destroy_window(game->mlx, game->win);
-	if (game->mlx)
-	{
-		mlx_destroy_display(game->mlx);
-		free(game->mlx);
-	}
+	mlx_destroy_display(game->mlx);
+	free(game->mlx);
 	freemem (map, 3);
-	exit(0);
+	if (out)
+		exit(0);
+	return (0);
 }
 
 int	draw_map(t_map *map, t_game *game)
 {
+	game->exit = NULL;
+	game->plr = NULL;
+	game->pll = NULL;
+	game->colec = NULL;
+	game->lake = NULL;
+	game->wall = NULL;
+	game->wall1 = NULL;
 	if (!draw_bg (map, game))
-		return (freemlx (game), 0);
+		return (freemlx (game, 0), 0);
 	if (!put_pec (map, game))
-		return (freemlx (game), 0);
+		return (freemlx (game, 0), 0);
 	return (1);
 }
 
@@ -183,7 +189,7 @@ int	mov_up(t_map *map, t_game *game, int x, int y)
 	else if (map->map[x - 1][y] == 'E')
 	{
 		if (map->v_exit == 1)
-			freemlx(game);
+			freemlx(game, 1);
 	}
 	return (0);
 }
@@ -212,7 +218,7 @@ int	mov_down(t_map *map, t_game *game, int x, int y)
 	else if (map->map[x + 1][y] == 'E')
 	{
 		if (map->v_exit == 1)
-			freemlx(game);
+			freemlx(game, 1);
 	}
 	return (0);
 }
@@ -241,7 +247,7 @@ int	mov_right(t_map *map, t_game *game, int x, int y)
 	else if (map->map[x][y + 1] == 'E')
 	{
 		if (map->v_exit == 1)
-			freemlx(game);
+			freemlx(game, 1);
 	}
 	return (0);
 }
@@ -270,7 +276,7 @@ int	mov_left(t_map *map, t_game *game, int x, int y)
 	else if (map->map[x][y - 1] == 'E')
 	{
 		if (map->v_exit == 1)
-			freemlx(game);
+			freemlx(game, 1);
 	}
 	return (0);
 }
@@ -294,13 +300,13 @@ void	mov_player(t_game *game, int key)
 	else if (key == 119)
 		map->movs += mov_up(map, game, x, y);
 	if (map->movs > mov_chg)
-		printf ("Number of movements: %i\n", map->movs); //ALTERAR PARA FT_PRINTF.
+		ft_printf ("Number of movements: %i\n", map->movs);
 }
 
 int key_press(int keycode, t_game *game)
 {
     if (keycode == 65307)
-        freemlx(game);
+        freemlx(game, 1);
     if (keycode == 97)
         mov_player(game, 97);
     if (keycode == 100)
@@ -319,7 +325,7 @@ void	gameloop(t_game *game)
 	mlx_loop (game->mlx);
 }
 
-int	open_gui(t_map *map)
+int	open_gi(t_map *map)
 {
 	t_game	game;
 	int		w;
@@ -353,19 +359,23 @@ int	main(int argc, char **argv)
 	map = NULL;
 	tmp_map = NULL;
 	if (argc != 2 || argv[1][0] == '\0')
-		return (0);
+		return (ft_printf ("Map not found.\n"), 1);
 	if (!ber_filetype (argv))
-		return (0);
+		return (ft_printf ("Map not found.\n"), 1);
 	tmp_map = read_map (argv, tmp_map);
 	if (!tmp_map)
-		return (0);
+		return (1);
 	map = create_map (map, tmp_map);
 	if (!map)
 		return (free (tmp_map), 0);
 	free (tmp_map);
 	if (!valid_map (map))
-		return (freemem(map, 3), 0);
-	open_gui(map);	// pode terminar programa aqui
+	{
+		ft_printf ("Invalid map.\n");
+		return (freemem(map, 3), 1);
+	}
+	if (!open_gi(map))
+		return (ft_printf ("Error loading graphics.\n"), 1);
 	return (freemem(map, 3), 0);
 }
 
