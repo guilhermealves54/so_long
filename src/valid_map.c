@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:19:49 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/02/12 23:15:25 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/03/18 16:18:25 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,4 +111,26 @@ static int	check_symbols(t_map *map, int *pec)
 	if (pec[0] != 1 || pec[1] != 1 || pec[2] < 1)
 		return (0);
 	return (1);
+}
+
+void	findexit(t_map *map, int *x, int *y)
+{
+	int		n;
+	int		i;
+
+	n = 0;
+	while (map->map[n])
+	{
+		i = 0;
+		while (map->map[n][i] != '\0')
+		{
+			if (map->map[n][i] == 'E')
+			{
+				*x = n;
+				*y = i;
+			}
+			i++;
+		}
+		n++;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:19:33 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/02/11 16:59:47 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/03/18 16:23:52 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,33 @@ void	freevisitd(char **visitd)
 		n++;
 	}
 	free (visitd);
+}
+
+int	freemlx(t_gm *gm, int out)
+{
+	t_map	*map;
+
+	map = gm->map;
+	if (gm->exit)
+		mlx_destroy_image(gm->mlx, gm->exit);
+	if (gm->plr)
+		mlx_destroy_image(gm->mlx, gm->plr);
+	if (gm->pll)
+		mlx_destroy_image(gm->mlx, gm->pll);
+	if (gm->colec)
+		mlx_destroy_image(gm->mlx, gm->colec);
+	if (gm->lake)
+		mlx_destroy_image(gm->mlx, gm->lake);
+	if (gm->wall)
+		mlx_destroy_image(gm->mlx, gm->wall);
+	if (gm->wall1)
+		mlx_destroy_image(gm->mlx, gm->wall1);
+	if (gm->wn)
+		mlx_destroy_window(gm->mlx, gm->wn);
+	mlx_destroy_display(gm->mlx);
+	free(gm->mlx);
+	freemem (map, 3);
+	if (out)
+		exit(0);
+	return (0);
 }

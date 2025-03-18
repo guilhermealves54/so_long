@@ -6,15 +6,31 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:19:27 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/02/11 16:36:35 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/03/18 15:43:20 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	findplayer(t_map *map, int *x, int *y);
+void		findplayer(t_map *map, int *x, int *y);
 static char	**fillvisitd(t_map *map, char **visitd);
 static int	explore(t_map *map, int x, int y, char **visitd);
+
+static int	allc_visitd(t_map *map, char **visitd)
+{
+	int		n;
+
+	n = 0;
+	while (map->map[n])
+	{
+		visitd[n] = calloc ((ft_strlen (map->map[n])) + 1, sizeof (char));
+		if (!visitd[n])
+			return (freevisitd (visitd), 0);
+		visitd[n][ft_strlen (map->map[n])] = '\0';
+		n++;
+	}
+	return (1);
+}
 
 int	check_wayout(t_map *map)
 {
@@ -31,15 +47,8 @@ int	check_wayout(t_map *map)
 	if (!visitd)
 		return (0);
 	visitd[n] = NULL;
-	n = 0;
-	while (map->map[n])
-	{
-		visitd[n] = calloc ((ft_strlen (map->map[n])) + 1, sizeof (char));
-		if (!visitd[n])
-			return (freevisitd (visitd), 0);
-		visitd[n][ft_strlen (map->map[n])] = '\0';
-		n++;
-	}
+	if (!allc_visitd (map, visitd))
+		return (0);
 	visitd = fillvisitd (map, visitd);
 	if (!explore (map, x, y, visitd))
 		return (freevisitd (visitd), 0);

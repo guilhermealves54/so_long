@@ -6,7 +6,7 @@
 #    By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/28 15:19:12 by gribeiro          #+#    #+#              #
-#    Updated: 2025/02/12 23:51:30 by gribeiro         ###   ########.fr        #
+#    Updated: 2025/03/18 16:44:12 by gribeiro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@
 NAME = so_long
 
 # Source files and object files
-SRC = $(addprefix src/, ft_strlen.c ft_strncmp.c so_long.c ft_strdup.c ft_strjoin.c ft_calloc.c check_wayout.c freemem.c create_map.c valid_map.c)
+SRC = $(wildcard src/*.c)
 OBJS = $(SRC:.c=.o)
 
 # Compiler and flags
@@ -52,6 +52,7 @@ ft_printf:
 clean:
 	rm -f $(OBJS)
 	@make -C $(MLX_DIR) clean
+	@make -C $(FT_PRINTF_DIR) clean
 
 fclean: clean
 	rm -f $(NAME)
