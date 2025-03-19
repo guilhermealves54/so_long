@@ -6,7 +6,7 @@
 #    By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/28 15:19:12 by gribeiro          #+#    #+#              #
-#    Updated: 2025/03/18 16:44:12 by gribeiro         ###   ########.fr        #
+#    Updated: 2025/03/19 15:50:08 by gribeiro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,12 +14,12 @@
 NAME = so_long
 
 # Source files and object files
-SRC = $(wildcard src/*.c)
+SRC = src/check_wayout.c src/create_map.c src/draw_map.c src/freemem.c src/ft_calloc.c src/ft_strdup.c src/ft_strjoin.c src/ft_strlen.c src/ft_strncmp.c src/keys.c src/movement.c src/so_long.c src/valid_map.c src/chk_assets.c
 OBJS = $(SRC:.c=.o)
 
 # Compiler and flags
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 # ft_printf
 FT_PRINTF_DIR = ./ft_printf
@@ -40,14 +40,16 @@ $(NAME): $(OBJS) $(FT_PRINTF_LIB)
 mlx:
 	@if [ ! -d "$(MLX_DIR)" ]; then \
 		git clone https://github.com/42Paris/minilibx-linux.git $(MLX_DIR); \
+	fi
+	@if [ ! -f "$(MLX_DIR)/libmlx.a" ]; then \
 		make -C $(MLX_DIR); \
 	fi
 
 ft_printf:
 	@if [ ! -d "$(FT_PRINTF_DIR)" ]; then \
 		git clone git@github.com:guilhermealves54/ft_printf.git $(FT_PRINTF_DIR); \
-		make -C $(FT_PRINTF_DIR); \
 	fi
+	make -C $(FT_PRINTF_DIR)
 
 clean:
 	rm -f $(OBJS)
@@ -72,4 +74,4 @@ test: all
 	./$(NAME) maps/01.ber
 
 valgrind: all
-	valgrind --track-origins=yes ./so_long maps/01.ber
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./so_long maps/01.ber

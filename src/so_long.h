@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:19:18 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/03/18 16:20:31 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:50:30 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,5 +79,6 @@ int		draw_bg(t_map *map, t_gm *gm);
 void	put_colec(t_map *map, t_gm *gm);
 int		key_press(int keycode, t_gm *gm);
 void	mov_player(t_gm *gm, int key);
+int		chk_assets(void);
 
 #endif
