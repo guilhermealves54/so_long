@@ -19,7 +19,7 @@ OBJS = $(SRC:.c=.o)
 
 # Compiler and flags
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 
 # ft_printf
 FT_PRINTF_DIR = ./ft_printf
